@@ -1,19 +1,28 @@
 import { Injectable } from "@nestjs/common";
 import * as bcrypt from "bcrypt";
-import { BasicLoginRequest, LoginQuery, TokenResponse } from "./dto";
+import {
+	BasicLoginRequest,
+	ChangePasswordRequest,
+	LoginQuery,
+	TokenResponse,
+} from "./dto";
 import { AccountDocumentType, AccountModel } from "@db/models";
 import {
 	AccountInitializedError,
 	InvalidLoginTypeError,
+	WrongPasswordError,
 	WrongUsernameOrPasswordError,
 } from "./errors";
 import * as jwt from "jsonwebtoken";
-import { Env } from "@utils";
+import { Env, PortfolioClsStore } from "@utils";
 import { LoginTypeEnum } from "./enums";
+import { ClsService } from "nestjs-cls";
 
 @Injectable()
 export class AuthService {
 	private firstLoginToken: string;
+
+	constructor(private readonly cls: ClsService<PortfolioClsStore>) {}
 
 	signToken(
 		accountId: string,
@@ -23,22 +32,17 @@ export class AuthService {
 	): TokenResponse {
 		const now = Date.now();
 		const expiresAt = now + Env.JWT_AT_EXPIRE_IN * 1000;
-		const at = jwt.sign(
-			{
-				ua,
-				ip,
-			},
-			Env.JWT_AT_SECRET,
-			{
-				subject: accountId,
-				expiresIn: Env.JWT_AT_EXPIRE_IN,
-			},
-		);
-		return {
-			accessToken: at,
-			expiresAt,
-			isFirstLogin,
-		};
+		const at = jwt.sign({ ua, ip }, Env.JWT_AT_SECRET, {
+			subject: accountId,
+			expiresIn: Env.JWT_AT_EXPIRE_IN,
+		});
+		return { accessToken: at, expiresAt, isFirstLogin };
+	}
+
+	async verifyAccessToken(token: string, ua: string, ip: string) {
+		const data = jwt.verify(token, Env.JWT_AT_SECRET, {});
+		if (typeof data === "string") return null;
+		if (data.ua == ua && ip == data.ip) return data.sub;
 	}
 
 	async generateFirstLoginToken() {
@@ -93,5 +97,17 @@ export class AuthService {
 			default:
 				throw new InvalidLoginTypeError();
 		}
+	}
+
+	async changePassword(dto: ChangePasswordRequest) {
+		const account = this.cls.get("account");
+		const checkPassword = await bcrypt.compare(
+			dto.currentPassword,
+			account.password,
+		);
+		if (!checkPassword) throw new WrongPasswordError();
+		await AccountModel.findByIdAndUpdate(account.id, {
+			password: await bcrypt.hash(dto.newPassword, 10),
+		});
 	}
 }

@@ -1,12 +1,25 @@
 import { Module } from "@nestjs/common";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
-import { APP_FILTER, APP_PIPE } from "@nestjs/core";
+import { APP_FILTER, APP_GUARD, APP_PIPE } from "@nestjs/core";
 import { MyExceptionFilter, ValidationPipe } from "@utils";
-import { AuthModule } from "@modules/auth";
+import { AuthGuard, AuthModule } from "@modules/auth";
+import { BlogModule } from "@modules/blog";
+import { ClsModule } from "nestjs-cls";
+import { AccountModule } from "@modules/account";
 
 @Module({
-	imports: [AuthModule],
+	imports: [
+		ClsModule.forRoot({
+			global: true,
+			middleware: {
+				mount: true,
+			},
+		}),
+		AuthModule,
+		BlogModule,
+		AccountModule,
+	],
 	controllers: [AppController],
 	providers: [
 		AppService,
@@ -17,6 +30,10 @@ import { AuthModule } from "@modules/auth";
 		{
 			provide: APP_PIPE,
 			useClass: ValidationPipe,
+		},
+		{
+			provide: APP_GUARD,
+			useClass: AuthGuard,
 		},
 	],
 })

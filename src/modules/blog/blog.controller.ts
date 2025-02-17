@@ -1,15 +1,11 @@
-import {
-	Controller,
-	Param,
-	Body,
-	Query,
-	Post,
-	Get,
-	Put,
-	Delete,
-} from "@nestjs/common";
+import { Controller, Param, Body, Query, Post, Get, Put } from "@nestjs/common";
 import { BlogService } from "./blog.service";
-import { CreateBlogRequest, UpdateBlogRequest, BlogQuery } from "./dto";
+import {
+	CreateBlogRequest,
+	UpdateBlogRequest,
+	BlogQuery,
+	BlogResponse,
+} from "./dto";
 import { ApiResponseDto } from "@utils";
 
 @Controller("blog")
@@ -31,18 +27,18 @@ export class BlogController {
 	@Get()
 	async findMany(@Query() query: BlogQuery) {
 		const data = await this.blogService.findMany(query);
-		return new ApiResponseDto(data);
+		return new ApiResponseDto(BlogResponse.fromDocuments(data));
+	}
+
+	@Get(":id/visible")
+	async toggleVisible(@Param("id") id: string) {
+		await this.blogService.toggleVisible(id);
+		return new ApiResponseDto(null, null, "Success!");
 	}
 
 	@Get(":id")
 	async findOne(@Param("id") id: string) {
-		const data = await this.blogService.findOne(id);
-		return new ApiResponseDto(data);
-	}
-
-	@Delete(":id")
-	async deleteOne(@Param("id") id: string) {
-		await this.blogService.deleteOne(id);
-		return new ApiResponseDto(null, null, "Deleted successfully");
+		const data = await this.blogService.findOneOrFail(id);
+		return new ApiResponseDto(BlogResponse.fromDocument(data));
 	}
 }
