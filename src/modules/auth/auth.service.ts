@@ -110,4 +110,9 @@ export class AuthService {
 			password: await bcrypt.hash(dto.newPassword, 10),
 		});
 	}
+
+	getProfileCls() {
+		const account = this.cls.get("account");
+		return account;
+	}
 }

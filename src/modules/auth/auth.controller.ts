@@ -14,6 +14,8 @@ import { Request, Response } from "express";
 import { ApiResponseDto, Env } from "@utils";
 import { ApiError } from "@errors";
 import { SkipAuth } from "./skip-auth.decorator";
+import { AccountResponse } from "@modules/account/dto";
+import { Types } from "mongoose";
 
 @Controller("auth")
 export class AuthController {
@@ -65,5 +67,18 @@ export class AuthController {
 	async changePassword(@Body() dto: ChangePasswordRequest) {
 		await this.authService.changePassword(dto);
 		return new ApiResponseDto(null, null, "Success!");
+	}
+
+	@Get("profile")
+	async getProfile() {
+		const account = this.authService.getProfileCls();
+		return new ApiResponseDto(
+			AccountResponse.fromDocument({
+				...account,
+				_id: new Types.ObjectId(account.id),
+			}),
+			null,
+			"Success!",
+		);
 	}
 }
