@@ -18,7 +18,7 @@ export class BlogService {
 
 	async findMany(query: BlogQuery) {
 		return await BlogModel.find({}, { content: false }, {})
-			.sort({ updatedAt: -1 })
+			.sort({ isVisible: -1, updatedAt: -1 })
 			.exec();
 	}
 
@@ -36,5 +36,9 @@ export class BlogService {
 		const blog = await this.findOneOrFail(id);
 		blog.isVisible = !blog.isVisible;
 		return blog.save();
+	}
+
+	async deleteOne(id: string) {
+		await BlogModel.findByIdAndDelete(id);
 	}
 }

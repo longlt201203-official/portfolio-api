@@ -81,4 +81,14 @@ export class AuthController {
 			"Success!",
 		);
 	}
+
+	@Get("logout")
+	async logout(@Res() res: Response) {
+		res.cookie("accessToken", "", {
+			httpOnly: true,
+			domain: Env.NODE_ENV != "local" && Env.APP_DOMAIN,
+			expires: new Date(),
+		});
+		res.redirect(Env.FRONT_LOGIN_URI);
+	}
 }

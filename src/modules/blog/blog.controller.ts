@@ -1,4 +1,13 @@
-import { Controller, Param, Body, Query, Post, Get, Put } from "@nestjs/common";
+import {
+	Controller,
+	Param,
+	Body,
+	Query,
+	Post,
+	Get,
+	Put,
+	Delete,
+} from "@nestjs/common";
 import { BlogService } from "./blog.service";
 import {
 	CreateBlogRequest,
@@ -30,7 +39,7 @@ export class BlogController {
 		return new ApiResponseDto(BlogResponse.fromDocuments(data));
 	}
 
-	@Get(":id/visible")
+	@Get(":id/toggle-visible")
 	async toggleVisible(@Param("id") id: string) {
 		await this.blogService.toggleVisible(id);
 		return new ApiResponseDto(null, null, "Success!");
@@ -40,5 +49,11 @@ export class BlogController {
 	async findOne(@Param("id") id: string) {
 		const data = await this.blogService.findOneOrFail(id);
 		return new ApiResponseDto(BlogResponse.fromDocument(data));
+	}
+
+	@Delete(":id")
+	async deleteOne(@Param("id") id: string) {
+		await this.blogService.deleteOne(id);
+		return new ApiResponseDto(null, null, "Success!");
 	}
 }
