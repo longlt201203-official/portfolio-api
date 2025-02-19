@@ -5,4 +5,6 @@ export class PaginationDto {
 	totalPage: number;
 	nextPage?: number;
 	prevPage?: number;
+
+	constructor(page: number, limit: number, totalRecord: number) {}
 }

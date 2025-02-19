@@ -7,6 +7,7 @@ import { AuthGuard, AuthModule } from "@modules/auth";
 import { BlogModule } from "@modules/blog";
 import { ClsModule } from "nestjs-cls";
 import { AccountModule } from "@modules/account";
+import { FrontApiModule } from "@modules/front-api";
 
 @Module({
 	imports: [
@@ -19,6 +20,7 @@ import { AccountModule } from "@modules/account";
 		AuthModule,
 		BlogModule,
 		AccountModule,
+		FrontApiModule,
 	],
 	controllers: [AppController],
 	providers: [
