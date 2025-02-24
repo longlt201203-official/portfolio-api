@@ -6,5 +6,12 @@ export class PaginationDto {
 	nextPage?: number;
 	prevPage?: number;
 
-	constructor(page: number, limit: number, totalRecord: number) {}
+	constructor(page: number, take: number, totalRecord: number) {
+		this.page = page;
+		this.take = take;
+		this.totalRecord = totalRecord;
+		this.totalPage = Math.ceil(totalRecord / take);
+		this.nextPage = page + 1 < this.totalPage ? page + 1 : undefined;
+		this.prevPage = page - 1 > 0 ? page - 1 : undefined;
+	}
 }

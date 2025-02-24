@@ -3,12 +3,6 @@ import { CreateBlogRequest, UpdateBlogRequest, BlogQuery } from "./dto";
 import { BlogModel } from "@db/models";
 import { BlogNotFoundError } from "./errors";
 
-async function wait() {
-	return new Promise((resolve) => {
-		setTimeout(resolve, 3000);
-	});
-}
-
 @Injectable()
 export class BlogService {
 	async createOne(dto: CreateBlogRequest) {
@@ -45,7 +39,6 @@ export class BlogService {
 	}
 
 	async deleteOne(id: string) {
-		await wait();
 		await BlogModel.findByIdAndDelete(id);
 	}
 }

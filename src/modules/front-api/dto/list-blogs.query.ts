@@ -13,5 +13,5 @@ export class ListBlogsQuery {
 	@IsNumber()
 	@IsOptional()
 	@Type(() => Number)
-	limit?: number;
+	take?: number;
 }

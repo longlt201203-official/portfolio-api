@@ -8,6 +8,7 @@ import { BlogModule } from "@modules/blog";
 import { ClsModule } from "nestjs-cls";
 import { AccountModule } from "@modules/account";
 import { FrontApiModule } from "@modules/front-api";
+import { TimelineModule } from "@modules/timeline";
 
 @Module({
 	imports: [
@@ -20,6 +21,7 @@ import { FrontApiModule } from "@modules/front-api";
 		AuthModule,
 		BlogModule,
 		AccountModule,
+		TimelineModule,
 		FrontApiModule,
 	],
 	controllers: [AppController],
