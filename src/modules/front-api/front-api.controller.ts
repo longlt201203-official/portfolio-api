@@ -1,7 +1,7 @@
 import { Controller, Get, Query } from "@nestjs/common";
 import { FrontApiService } from "./front-api.service";
 import { LandingPageInfoResponse, ListBlogsQuery, ViewBlogQuery } from "./dto";
-import { ApiResponseDto, PaginationDto } from "@utils";
+import { ApiResponseDto, PaginationDto, SwaggerApiResponse } from "@utils";
 import { BlogResponse } from "@modules/blog/dto";
 import { SkipAuth } from "@modules/auth";
 
@@ -11,6 +11,7 @@ export class FrontApiController {
 	constructor(private readonly frontApiService: FrontApiService) {}
 
 	@Get("list-blogs")
+	@SwaggerApiResponse(BlogResponse, { isArray: true, withPagination: true })
 	async getListBlogs(@Query() query: ListBlogsQuery) {
 		const { data, count } = await this.frontApiService.getListBlogs(query);
 		return new ApiResponseDto(
@@ -21,6 +22,7 @@ export class FrontApiController {
 	}
 
 	@Get("view-blog")
+	@SwaggerApiResponse(BlogResponse)
 	async viewBlog(@Query() query: ViewBlogQuery) {
 		const data = await this.frontApiService.viewBlog(query);
 		return new ApiResponseDto(
@@ -31,10 +33,12 @@ export class FrontApiController {
 	}
 
 	@Get("landing-page")
+	@SwaggerApiResponse(LandingPageInfoResponse)
 	async getLandingPageInfo() {
-		const { blogs } = await this.frontApiService.getLandingPageInfo();
+		const { blogs, timelines, info } =
+			await this.frontApiService.getLandingPageInfo();
 		return new ApiResponseDto(
-			new LandingPageInfoResponse(blogs),
+			new LandingPageInfoResponse(blogs, timelines, info),
 			null,
 			"Success!",
 		);

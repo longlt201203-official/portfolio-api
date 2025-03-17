@@ -6,6 +6,9 @@ export class AccountResponse {
 	@ApiProperty()
 	id: string;
 
+	@ApiProperty({ type: String })
+	superEmail: string;
+
 	@ApiProperty({ type: String, isArray: true })
 	emails: string[];
 
@@ -26,6 +29,7 @@ export class AccountResponse {
 	): AccountResponse {
 		return {
 			id: account._id.toString(),
+			superEmail: account.superEmail,
 			emails: account.emails,
 			firstName: account.firstName,
 			lastName: account.lastName,

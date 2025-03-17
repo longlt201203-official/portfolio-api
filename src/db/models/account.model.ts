@@ -1,6 +1,7 @@
 import mongoose, { HydratedDocument, Model, Schema } from "mongoose";
 
 export interface IAccount {
+	superEmail: string;
 	emails: string[];
 	password: string;
 	firstName: string;
@@ -14,6 +15,7 @@ export type AccountDocumentType = HydratedDocument<IAccount>;
 export type AccountModelType = Model<IAccount, {}, {}, {}, AccountDocumentType>;
 
 const AccountSchema = new Schema<IAccount, AccountModelType>({
+	superEmail: { type: String, required: true },
 	emails: { type: [String], required: true },
 	password: { type: String, required: true },
 	firstName: { type: String, required: true },

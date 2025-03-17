@@ -5,6 +5,7 @@ import helmet from "helmet";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { initDbConnection } from "@db";
 import * as cookieParser from "cookie-parser";
+import * as fs from "fs";
 
 async function bootstrap() {
 	await initDbConnection();
@@ -23,6 +24,7 @@ async function bootstrap() {
 			.build();
 		const document = SwaggerModule.createDocument(app, config);
 		SwaggerModule.setup("api/docs", app, document);
+		fs.writeFileSync("swagger.json", JSON.stringify(document, null, 2));
 	}
 
 	await app.listen(Env.LISTEN_PORT);

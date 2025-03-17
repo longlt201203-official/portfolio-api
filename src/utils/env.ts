@@ -17,6 +17,9 @@ export const Env = {
 	FRONT_LOGIN_URI: process.env.FRONT_LOGIN_URI || "",
 	FRONT_ADMIN_URI: process.env.FRONT_ADMIN_URI || "",
 	FRONT_CHANGE_PASS_URI: process.env.FRONT_CHANGE_PASS_URI || "",
+	S3_ENDPOINT: process.env.S3_ENDPOINT || "",
+	S3_REGION: process.env.S3_REGION || "",
+	S3_BUCKET: process.env.S3_BUCKET || "",
 } as const;
 
 console.log(Env);

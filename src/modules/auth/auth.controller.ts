@@ -9,9 +9,20 @@ import {
 	Res,
 } from "@nestjs/common";
 import { AuthService } from "./auth.service";
-import { BasicLoginRequest, ChangePasswordRequest, LoginQuery } from "./dto";
+import {
+	BasicLoginRequest,
+	ChangePasswordRequest,
+	LoginQuery,
+	TokenResponse,
+} from "./dto";
 import { Request, Response } from "express";
-import { ApiResponseDto, Env } from "@utils";
+import {
+	ApiMessageResponseDto,
+	ApiResponseDto,
+	Env,
+	SwaggerApiMessageResponse,
+	SwaggerApiResponse,
+} from "@utils";
 import { ApiError } from "@errors";
 import { SkipAuth } from "./skip-auth.decorator";
 import { AccountResponse } from "@modules/account/dto";
@@ -22,6 +33,7 @@ export class AuthController {
 	constructor(private readonly authService: AuthService) {}
 
 	@Post("basic-login")
+	@SwaggerApiResponse(TokenResponse)
 	async basicLogin(@Body() dto: BasicLoginRequest, @Req() req: Request) {
 		const ua = req.headers["user-agent"];
 		const ip =
@@ -64,12 +76,14 @@ export class AuthController {
 	}
 
 	@Put("change-password")
+	@SwaggerApiMessageResponse()
 	async changePassword(@Body() dto: ChangePasswordRequest) {
 		await this.authService.changePassword(dto);
-		return new ApiResponseDto(null, null, "Success!");
+		return new ApiMessageResponseDto("Success!");
 	}
 
 	@Get("profile")
+	@SwaggerApiResponse(AccountResponse)
 	async getProfile() {
 		const account = this.authService.getProfileCls();
 		return new ApiResponseDto(

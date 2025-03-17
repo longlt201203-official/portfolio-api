@@ -1,15 +1,21 @@
-// import { Type, applyDecorators } from "@nestjs/common";
+import { Type, applyDecorators } from "@nestjs/common";
 import { PaginationDto } from "./pagination.dto";
-// import { ApiExtraModels, ApiOkResponse, ApiProperty, OmitType, getSchemaPath } from "@nestjs/swagger";
+import {
+	ApiExtraModels,
+	ApiOkResponse,
+	ApiProperty,
+	OmitType,
+	getSchemaPath,
+} from "@nestjs/swagger";
 
 export class ApiResponseDto<T = any> {
-	// @ApiProperty({ required: false })
+	@ApiProperty({ required: false })
 	message?: string;
 
-	// @ApiProperty()
+	@ApiProperty()
 	data?: T;
 
-	// @ApiProperty({ required: false, type: PaginationDto })
+	@ApiProperty({ required: false, type: PaginationDto })
 	pagination?: PaginationDto;
 
 	constructor(data?: T, pagination?: PaginationDto, message?: string) {
@@ -19,36 +25,65 @@ export class ApiResponseDto<T = any> {
 	}
 }
 
-// interface SwaggerApiResponseOptions {
-//     isArray?: boolean;
-//     withPagination?: boolean;
-// }
+export class ApiMessageResponseDto {
+	@ApiProperty()
+	message: string;
 
-// export const SwaggerApiResponse = <T extends Type<any>>(t: T, opts?: SwaggerApiResponseOptions) => {
-//     const swaggerModel = opts?.withPagination ? ApiResponseDto : OmitType(ApiResponseDto, ["pagination"]);
+	constructor(message: string) {
+		this.message = message;
+	}
+}
 
-//     return applyDecorators(
-//         ApiExtraModels(swaggerModel, t),
-//         ApiOkResponse({
-//             schema: {
-//                 allOf: [
-//                     { $ref: getSchemaPath(swaggerModel) },
-//                     {
-//                         properties: {
-//                             data: opts?.isArray ? {
-//                                 type: "array",
-//                                 items: {
-//                                     type: "object",
-//                                     $ref: getSchemaPath(t)
-//                                 }
-//                             } : {
-//                                 type: "object",
-//                                 $ref: getSchemaPath(t)
-//                             }
-//                         }
-//                     }
-//                 ]
-//             }
-//         })
-//     );
-// };
+interface SwaggerApiResponseOptions {
+	isArray?: boolean;
+	withPagination?: boolean;
+}
+
+export function SwaggerApiResponse<T extends Type<any>>(
+	t: T,
+	opts?: SwaggerApiResponseOptions,
+): MethodDecorator {
+	const swaggerModel = opts?.withPagination
+		? ApiResponseDto
+		: OmitType(ApiResponseDto, ["pagination"]);
+
+	let dataSchema;
+	if (opts?.isArray) {
+		dataSchema = {
+			type: "array",
+			items: {
+				type: "object",
+				$ref: getSchemaPath(t),
+			},
+		};
+	} else {
+		dataSchema = {
+			type: "object",
+			$ref: getSchemaPath(t),
+		};
+	}
+
+	return applyDecorators(
+		ApiExtraModels(swaggerModel, t),
+		ApiOkResponse({
+			schema: {
+				allOf: [
+					{ $ref: getSchemaPath(swaggerModel) },
+					{
+						properties: {
+							data: dataSchema,
+						},
+					},
+				],
+			},
+		}),
+	);
+}
+
+export function SwaggerApiMessageResponse() {
+	return applyDecorators(
+		ApiOkResponse({
+			type: ApiMessageResponseDto,
+		}),
+	);
+}
