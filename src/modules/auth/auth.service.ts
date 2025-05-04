@@ -58,9 +58,7 @@ export class AuthService {
 			account = await this.initAccount(dto);
 			isFirstLogin = true;
 		} else {
-			account = await AccountModel.findOne({
-				$or: [{ superEmail: dto.email }, { emails: dto.email }],
-			});
+			account = await AccountModel.findOne({ email: dto.email });
 		}
 		if (!account) throw new WrongUsernameOrPasswordError();
 		const isPasswordValid = await bcrypt.compare(
@@ -75,13 +73,8 @@ export class AuthService {
 		let account = await AccountModel.findOne();
 		if (account) throw new AccountInitializedError();
 		account = new AccountModel({
-			superEmail: dto.email,
-			emails: [],
+			email: dto.email,
 			password: await bcrypt.hash(dto.password, 10),
-			addresses: [],
-			firstName: "Admin",
-			lastName: "Admin",
-			phoneNumbers: [],
 		});
 		return await account.save();
 	}

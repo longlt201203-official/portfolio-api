@@ -6,10 +6,11 @@ import { MyExceptionFilter, ValidationPipe } from "@utils";
 import { AuthGuard, AuthModule } from "@modules/auth";
 import { BlogModule } from "@modules/blog";
 import { ClsModule } from "nestjs-cls";
-import { AccountModule } from "@modules/account";
 import { FrontApiModule } from "@modules/front-api";
 import { TimelineModule } from "@modules/timeline";
 import { InfoModule } from "@modules/info";
+import { ProjectModule } from "@modules/project";
+import { AccountModule } from "@modules/account";
 
 @Module({
 	imports: [
@@ -21,9 +22,10 @@ import { InfoModule } from "@modules/info";
 		}),
 		AuthModule,
 		BlogModule,
-		AccountModule,
 		TimelineModule,
 		InfoModule,
+		AccountModule,
+		ProjectModule,
 		FrontApiModule,
 	],
 	controllers: [AppController],
