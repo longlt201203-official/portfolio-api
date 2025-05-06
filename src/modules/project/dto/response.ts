@@ -17,6 +17,12 @@ export class ProjectResponse {
 	@ApiProperty()
 	createdAt: Date;
 
+	@ApiProperty()
+	isHidden: boolean;
+
+	@ApiProperty()
+	order: number;
+
 	static fromDocument(d: ProjectDocumentType): ProjectResponse {
 		return {
 			id: d._id.toString(),
@@ -24,6 +30,8 @@ export class ProjectResponse {
 			description: d.description,
 			projectLink: d.projectLink,
 			createdAt: d.createdAt,
+			isHidden: d.isHidden,
+			order: d.order,
 		};
 	}
 

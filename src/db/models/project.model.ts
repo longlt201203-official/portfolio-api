@@ -5,6 +5,8 @@ export interface IProject {
 	description: string;
 	createdAt: Date;
 	projectLink: string;
+	isHidden: boolean;
+	order: number;
 }
 
 export type ProjectDocumentType = HydratedDocument<IProject>;
@@ -16,6 +18,8 @@ const ProjectSchema = new Schema<IProject, ProjectModelType>({
 	description: { type: String, required: true },
 	createdAt: { type: Date, default: () => new Date() },
 	projectLink: { type: String, required: true },
+	isHidden: { type: Boolean, default: true },
+	order: { type: Number, default: 0 },
 });
 
 export const ProjectModel = mongoose.model<IProject, ProjectModelType>(

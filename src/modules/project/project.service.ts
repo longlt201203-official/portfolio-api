@@ -14,6 +14,7 @@ export class ProjectService {
 			name: dto.name,
 			description: dto.description,
 			projectLink: dto.projectLink,
+			order: dto.order,
 		});
 		await project.save();
 	}
@@ -23,6 +24,7 @@ export class ProjectService {
 		project.name = dto.name;
 		project.description = dto.description;
 		project.projectLink = dto.projectLink;
+		project.order = dto.order;
 		await project.save();
 	}
 
