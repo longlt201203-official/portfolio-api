@@ -29,7 +29,7 @@ export class ProjectService {
 	}
 
 	async findMany(query: ProjectQuery) {
-		return await ProjectModel.find();
+		return await ProjectModel.find().sort({ sort: -1, createdAt: -1 });
 	}
 
 	async findOne(id: string, fail: boolean = false) {
@@ -38,6 +38,12 @@ export class ProjectService {
 			throw new ProjectNotFoundError();
 		}
 		return project;
+	}
+
+	async toggleVisibility(id: string) {
+		const project = await this.findOne(id, true);
+		project.isHidden = !project.isHidden;
+		await project.save();
 	}
 
 	async deleteOne(id: string) {

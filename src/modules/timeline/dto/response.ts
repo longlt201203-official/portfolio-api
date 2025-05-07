@@ -20,6 +20,9 @@ export class TimelineResponse {
 	@ApiProperty()
 	createdAt: Date;
 
+	@ApiProperty()
+	isHidden: boolean;
+
 	static fromDocument(d: TimelineDocumentType): TimelineResponse {
 		return {
 			id: d._id.toString(),
@@ -28,6 +31,7 @@ export class TimelineResponse {
 			content: d.content,
 			sort: d.sort,
 			createdAt: d.createdAt,
+			isHidden: d.isHidden,
 		};
 	}
 

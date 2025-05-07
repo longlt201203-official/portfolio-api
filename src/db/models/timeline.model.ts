@@ -6,6 +6,7 @@ export interface ITimeline {
 	content: string[];
 	sort: number;
 	createdAt: Date;
+	isHidden: boolean;
 }
 
 export type TimelineDocumentType = HydratedDocument<ITimeline>;
@@ -23,6 +24,7 @@ const TimelineSchema = new Schema<ITimeline, TimelineModelType>({
 	title: { type: String, required: true },
 	content: { type: [String], required: true },
 	sort: { type: Number, required: true, default: 0 },
+	isHidden: { type: Boolean, default: true },
 	createdAt: { type: Date, required: true, default: () => new Date() },
 });
 

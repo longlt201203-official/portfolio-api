@@ -47,7 +47,10 @@ export class FrontApiService {
 	}
 
 	async getListTimelines() {
-		return await TimelineModel.find({}).sort({ sort: -1, createdAt: -1 });
+		return await TimelineModel.find({ isHidden: false }).sort({
+			sort: -1,
+			createdAt: -1,
+		});
 	}
 
 	async getInfo() {

@@ -40,6 +40,13 @@ export class TimelineController {
 		return new ApiMessageResponseDto("Success!");
 	}
 
+	@Get(":id/toggle-visible")
+	@SwaggerApiMessageResponse()
+	async toggleVisible(@Param("id") id: string) {
+		await this.timelineService.toggleVisibility(id);
+		return new ApiResponseDto(null, null, "Success!");
+	}
+
 	@Get()
 	@SwaggerApiResponse(TimelineResponse, { isArray: true })
 	async findMany(@Query() query: TimelineQuery) {

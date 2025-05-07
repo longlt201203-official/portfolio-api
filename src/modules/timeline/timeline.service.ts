@@ -37,4 +37,10 @@ export class TimelineService {
 		const timeline = await this.findOne(id);
 		await TimelineModel.deleteOne(timeline._id);
 	}
+
+	async toggleVisibility(id: string) {
+		const timeline = await this.findOne(id);
+		timeline.isHidden = !timeline.isHidden;
+		await timeline.save();
+	}
 }

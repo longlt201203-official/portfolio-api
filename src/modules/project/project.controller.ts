@@ -39,6 +39,13 @@ export class ProjectController {
 		return new ApiResponseDto(null, null, "Updated successfully");
 	}
 
+	@Get(":id/toggle-visible")
+	@SwaggerApiMessageResponse()
+	async toggleVisibility(@Param("id") id: string) {
+		await this.projectService.toggleVisibility(id);
+		return new ApiResponseDto(null, null, "Updated successfully");
+	}
+
 	@Get()
 	@SwaggerApiResponse(ProjectResponse, { isArray: true })
 	async findMany(@Query() query: ProjectQuery) {
