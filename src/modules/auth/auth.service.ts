@@ -9,6 +9,7 @@ import {
 import { AccountDocumentType, AccountModel } from "@db/models";
 import {
 	AccountInitializedError,
+	GoogleReturnEmptyEmailError,
 	InvalidLoginTypeError,
 	WrongPasswordError,
 	WrongUsernameOrPasswordError,
@@ -17,12 +18,16 @@ import * as jwt from "jsonwebtoken";
 import { Env, PortfolioClsStore } from "@utils";
 import { LoginTypeEnum } from "./enums";
 import { ClsService } from "nestjs-cls";
+import { OAuth2Client } from "google-auth-library";
+import { AccountNotFoundError } from "@modules/account/errors";
 
 @Injectable()
 export class AuthService {
 	private firstLoginToken: string;
-
-	constructor(private readonly cls: ClsService<PortfolioClsStore>) {}
+	private googleClient: OAuth2Client;
+	constructor(private readonly cls: ClsService<PortfolioClsStore>) {
+		this.googleClient = new OAuth2Client();
+	}
 
 	signToken(
 		accountId: string,
@@ -79,6 +84,19 @@ export class AuthService {
 		return await account.save();
 	}
 
+	private async googleLogin(credential: string, ua: string, ip: string) {
+		const ticket = await this.googleClient.verifyIdToken({
+			idToken: credential,
+			audience: Env.GOOGLE_CLIENT_ID,
+		});
+		const payload = ticket.getPayload();
+		if (!payload.email) throw new GoogleReturnEmptyEmailError();
+		let account = await AccountModel.findOne({ email: payload.email });
+		if (!account) throw new AccountNotFoundError();
+
+		return this.signToken(account._id.toString(), ua, ip, false);
+	}
+
 	async login(query: LoginQuery, ua: string, ip: string) {
 		switch (query.type) {
 			case LoginTypeEnum.BASIC:
@@ -91,7 +109,7 @@ export class AuthService {
 					ip,
 				);
 			default:
-				throw new InvalidLoginTypeError();
+				return await this.googleLogin(query.code, ua, ip);
 		}
 	}
 

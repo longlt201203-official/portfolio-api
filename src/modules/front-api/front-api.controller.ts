@@ -35,10 +35,10 @@ export class FrontApiController {
 	@Get("landing-page")
 	@SwaggerApiResponse(LandingPageInfoResponse)
 	async getLandingPageInfo() {
-		const { blogs, timelines, info } =
+		const { blogs, timelines, info, projects } =
 			await this.frontApiService.getLandingPageInfo();
 		return new ApiResponseDto(
-			new LandingPageInfoResponse(blogs, timelines, info),
+			new LandingPageInfoResponse(blogs, timelines, info, projects),
 			null,
 			"Success!",
 		);

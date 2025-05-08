@@ -20,6 +20,7 @@ export const Env = {
 	S3_ENDPOINT: process.env.S3_ENDPOINT || "",
 	S3_REGION: process.env.S3_REGION || "",
 	S3_BUCKET: process.env.S3_BUCKET || "",
+	GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID || "",
 } as const;
 
 console.log(Env);

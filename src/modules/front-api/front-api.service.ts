@@ -1,8 +1,7 @@
-import { BlogModel, InfoModel, TimelineModel } from "@db/models";
+import { BlogModel, InfoModel, ProjectModel, TimelineModel } from "@db/models";
 import { Injectable } from "@nestjs/common";
 import { ListBlogsQuery, ViewBlogQuery } from "./dto";
 import { BlogNotFoundError } from "@modules/blog/errors";
-import { TimelineResponse } from "@modules/timeline/dto";
 
 @Injectable()
 export class FrontApiService {
@@ -57,13 +56,21 @@ export class FrontApiService {
 		return await InfoModel.findOne();
 	}
 
+	async getProjects() {
+		return await ProjectModel.find({ isHidden: false }).sort({
+			sort: -1,
+			createdAt: -1,
+		});
+	}
+
 	async getLandingPageInfo() {
-		const [blogs, timelines, info] = await Promise.all([
+		const [blogs, timelines, info, projects] = await Promise.all([
 			this.getLandingPageBlogs(),
 			this.getListTimelines(),
 			this.getInfo(),
+			this.getProjects(),
 		]);
 
-		return { blogs, timelines, info };
+		return { blogs, timelines, info, projects };
 	}
 }
