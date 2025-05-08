@@ -47,7 +47,8 @@ export class AuthService {
 	async verifyAccessToken(token: string, ua: string, ip: string) {
 		const data = jwt.verify(token, Env.JWT_AT_SECRET, {});
 		if (typeof data === "string") return null;
-		if (data.ua == ua && ip == data.ip) return data.sub;
+		// if (data.ua == ua && ip == data.ip) return data.sub;
+		return data.sub;
 	}
 
 	async generateFirstLoginToken() {
