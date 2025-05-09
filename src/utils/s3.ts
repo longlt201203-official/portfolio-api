@@ -2,9 +2,13 @@ import { S3Client } from "@aws-sdk/client-s3";
 import { Env } from "./env";
 
 export const s3Client = new S3Client({
-	endpoint: Env.S3_ENDPOINT ?? undefined,
 	region: Env.S3_REGION,
 	forcePathStyle: true,
+	...(Env.S3_ENDPOINT
+		? {
+				endpoint: Env.S3_ENDPOINT,
+			}
+		: {}),
 	...(Env.AWS_ACCESS_KEY_ID && Env.AWS_SECRET_ACCESS_KEY
 		? {
 				credentials: {
