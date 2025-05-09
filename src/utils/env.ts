@@ -17,6 +17,8 @@ export const Env = {
 	FRONT_LOGIN_URI: process.env.FRONT_LOGIN_URI || "",
 	FRONT_ADMIN_URI: process.env.FRONT_ADMIN_URI || "",
 	FRONT_CHANGE_PASS_URI: process.env.FRONT_CHANGE_PASS_URI || "",
+	AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID || "",
+	AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY || "",
 	S3_ENDPOINT: process.env.S3_ENDPOINT || "",
 	S3_REGION: process.env.S3_REGION || "",
 	S3_BUCKET: process.env.S3_BUCKET || "",
