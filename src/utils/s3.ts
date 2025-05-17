@@ -20,5 +20,5 @@ export const s3Client = new S3Client({
 });
 
 export function getS3Filepath(key: string) {
-	return `/files/${Env.S3_BUCKET}/${key}`;
+	return `/files/${key}`;
 }
