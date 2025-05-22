@@ -23,6 +23,7 @@ export const Env = {
 	S3_REGION: process.env.S3_REGION || "",
 	S3_BUCKET: process.env.S3_BUCKET || "",
 	GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID || "",
+	GEMINI_API_KEY: process.env.GEMINI_API_KEY || "",
 } as const;
 
 console.log(Env);

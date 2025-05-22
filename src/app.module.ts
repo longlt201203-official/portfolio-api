@@ -11,6 +11,7 @@ import { TimelineModule } from "@modules/timeline";
 import { InfoModule } from "@modules/info";
 import { ProjectModule } from "@modules/project";
 import { AccountModule } from "@modules/account";
+import { AiModule } from "@modules/ai";
 
 @Module({
 	imports: [
@@ -27,6 +28,7 @@ import { AccountModule } from "@modules/account";
 		AccountModule,
 		ProjectModule,
 		FrontApiModule,
+		AiModule,
 	],
 	controllers: [AppController],
 	providers: [
