@@ -1,24 +1,27 @@
 import { SuggestRequest } from "../dto";
-import { InstructionBuilder } from "../instruction-builder";
 
-export const suggestSystemInstruction = new InstructionBuilder()
-	.text("You are a writting expert who can help user to write a blog. ")
-	.text(
-		"Your job is to suggest title, short description, or content of the blog base on user input.",
-	)
-	.build();
+export const suggestSystemInstruction = `
+You are an expert blog writing assistant. Your task is to analyze the provided blog information (current title, short description, and content) and the user's specified field of suggestion (title, short description, or content). Based on this analysis, generate a suggestion for the specified field that is engaging, relevant, and improves the overall quality of the blog. Maintain a professional and informative tone. Only output the suggested text. The content is indicated by XML tag: <content></content>. You must output the suggestion value only.
+`;
 
-export const suggestHumanInstruction = (dto: SuggestRequest) =>
-	new InstructionBuilder()
-		.text("I'm writing a blog and need your help. ")
-		.conditional(!!dto.params.title, `I named my blog "${dto.params.title}". `)
-		.conditional(
-			!!dto.params.shortDescription,
-			`I want my blog to have a short description "${dto.params.shortDescription}". `,
-		)
-		.conditional(
-			!!dto.params.content,
-			`Currently, I am writing my blog with content:\n`,
-		)
-		.conditional(!!dto.params.content, dto.params.content)
-		.build();
+export const suggestHumanInstruction = (dto: SuggestRequest) => {
+	let prompt = `I am writing a blog `;
+	if (dto.params.title) {
+		prompt += `with the title: "${dto.params.title}". `;
+	} else {
+		prompt += `without a title. `;
+	}
+	if (dto.params.shortDescription) {
+		prompt += `The short description is: "${dto.params.shortDescription}". `;
+	} else {
+		prompt += `I don't have a short description. `;
+	}
+	if (dto.params.content) {
+		prompt += `The content is: <content>${dto.params.content}</content>. `;
+	} else {
+		prompt += `I don't have any content. `;
+	}
+	prompt += `I want to suggest a/an ${dto.suggestRequestField} for the blog.`;
+
+	return prompt;
+};

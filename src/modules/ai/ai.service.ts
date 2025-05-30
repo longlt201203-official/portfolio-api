@@ -8,6 +8,7 @@ import {
 	suggestSystemInstruction,
 } from "./instructions";
 import { SuggestRequest } from "./dto";
+import { z } from "zod";
 
 @Injectable()
 export class AiService {
@@ -21,13 +22,11 @@ export class AiService {
 
 	async suggest(dto: SuggestRequest) {
 		console.log(suggestHumanInstruction(dto));
-		// const promptValue = await ChatPromptTemplate
-		//     .fromMessages([
-		//         new SystemMessage(suggestSystemInstruction),
-		//         new HumanMessage(suggestHumanInstruction)
-		//     ])
-		//     .invoke(dto)
+		const promptValue = await ChatPromptTemplate.fromMessages([
+			new SystemMessage(suggestSystemInstruction),
+			new HumanMessage(suggestHumanInstruction(dto)),
+		]).invoke(dto);
 
-		// const data = await this.model.invoke(promptValue)
+		const data = await this.model.invoke(promptValue);
 	}
 }
