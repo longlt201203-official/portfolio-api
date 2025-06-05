@@ -21,11 +21,10 @@ export class AiService {
 	}
 
 	async suggest(dto: SuggestRequest) {
-		console.log(suggestHumanInstruction(dto));
 		const promptValue = await ChatPromptTemplate.fromMessages([
 			new SystemMessage(suggestSystemInstruction),
 			new HumanMessage(suggestHumanInstruction(dto)),
-		]).invoke(dto);
+		]).invoke({});
 
 		return await this.model
 			.withStructuredOutput(SuggestionResponseSchema)
