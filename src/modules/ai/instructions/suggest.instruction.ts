@@ -21,7 +21,7 @@ export const suggestHumanInstruction = (dto: SuggestRequest) => {
 	} else {
 		prompt += `I don't have any content. `;
 	}
-	prompt += `I want to suggest a/an ${dto.suggestRequestField} for the blog.`;
+	prompt += `I want to suggest ${dto.suggestRequestFields.length > 1 ? "these fields" : "a/an"} ${dto.suggestRequestFields.join(", ")} for the blog.`;
 
 	return prompt;
 };

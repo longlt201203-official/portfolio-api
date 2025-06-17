@@ -8,7 +8,6 @@ export class AiController {
 
 	@Post("suggest")
 	async suggest(@Body() dto: SuggestRequest) {
-		await this.aiService.suggest(dto);
-		return "suggest";
+		return await this.aiService.suggest(dto);
 	}
 }

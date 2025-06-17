@@ -7,7 +7,7 @@ import {
 	suggestHumanInstruction,
 	suggestSystemInstruction,
 } from "./instructions";
-import { SuggestRequest } from "./dto";
+import { SuggestionResponseSchema, SuggestRequest } from "./dto";
 import { z } from "zod";
 
 @Injectable()
@@ -27,6 +27,8 @@ export class AiService {
 			new HumanMessage(suggestHumanInstruction(dto)),
 		]).invoke(dto);
 
-		const data = await this.model.invoke(promptValue);
+		return await this.model
+			.withStructuredOutput(SuggestionResponseSchema)
+			.invoke(promptValue);
 	}
 }

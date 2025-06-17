@@ -6,10 +6,7 @@ export class ApiValidationError extends ApiError {
 		super({
 			code: "validation_err",
 			message: "Validation Error!",
-			detail: errors.map((err) => ({
-				field: err.property,
-				constraints: Object.keys(err.constraints),
-			})),
+			detail: errors,
 		});
 	}
 }

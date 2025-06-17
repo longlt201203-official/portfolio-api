@@ -9,7 +9,7 @@ export class SuggestRequest {
 	@ApiProperty({ type: String, isArray: true })
 	@IsArray()
 	@IsString({ each: true })
-	suggestRequestField: string[];
+	suggestRequestFields: string[];
 
 	@ApiProperty({ type: PartialCreateBlogRequest })
 	@ValidateNested()
