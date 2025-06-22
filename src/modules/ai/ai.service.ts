@@ -8,7 +8,6 @@ import {
 	suggestSystemInstruction,
 } from "./instructions";
 import { SuggestionResponseSchema, SuggestRequest } from "./dto";
-import { z } from "zod";
 
 @Injectable()
 export class AiService {

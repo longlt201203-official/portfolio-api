@@ -12,6 +12,7 @@ import { InfoModule } from "@modules/info";
 import { ProjectModule } from "@modules/project";
 import { AccountModule } from "@modules/account";
 import { AiModule } from "@modules/ai";
+import { QuoteModule } from "@modules/quote";
 
 @Module({
 	imports: [
@@ -29,6 +30,7 @@ import { AiModule } from "@modules/ai";
 		ProjectModule,
 		FrontApiModule,
 		AiModule,
+		QuoteModule,
 	],
 	controllers: [AppController],
 	providers: [

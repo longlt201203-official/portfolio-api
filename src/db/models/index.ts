@@ -4,3 +4,4 @@ export * from "./category.model";
 export * from "./timeline.model";
 export * from "./info.model";
 export * from "./project.model";
+export * from "./quote.model";

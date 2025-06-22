@@ -7,7 +7,10 @@ export const SuggestionResponseSchema = z.object({
 		.string()
 		.optional()
 		.describe("Short description of the blog"),
-	content: z.string().optional().describe("Content of the blog"),
+	content: z
+		.string()
+		.optional()
+		.describe("Content of the blog in markdown format"),
 	categories: z.array(z.string()).optional().describe("Categories of the blog"),
 });
 
