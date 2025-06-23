@@ -9,24 +9,42 @@ import {
 import { SuggestionResponseSchema, SuggestRequest } from "./dto";
 import { ChatOpenAI } from "@langchain/openai";
 import zodToJsonSchema from "zod-to-json-schema";
+import { BaseChatModel } from "@langchain/core/language_models/chat_models";
+import { ModelNotFoundError } from "./errors";
+// import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 
 @Injectable()
 export class AiService {
-	private readonly model: ChatOpenAI;
+	private readonly modelMap: Map<string, BaseChatModel> = new Map();
 	constructor() {
-		this.model = new ChatOpenAI({
-			model: "gpt-4",
-			apiKey: Env.OPENAI_API_KEY,
-		});
+		// this.modelMap.set("gemini-2.0-flash", new ChatGoogleGenerativeAI({
+		// 	model: "gemini-2.0-flash",
+		// 	apikey: Env.GEMINI_API_KEY
+		// }))
+
+		this.modelMap.set(
+			"gpt-4",
+			new ChatOpenAI({
+				model: "gpt-4",
+				apiKey: Env.OPENAI_API_KEY,
+			}),
+		);
 	}
 
-	async suggest(dto: SuggestRequest) {
+	private getModel(model: string) {
+		if (!this.modelMap.has(model)) {
+			throw new ModelNotFoundError();
+		}
+		return this.modelMap.get(model)!;
+	}
+
+	async suggest(model: string, dto: SuggestRequest) {
 		const promptValue = await ChatPromptTemplate.fromMessages([
 			new SystemMessage(suggestSystemInstruction),
 			new HumanMessage(suggestHumanInstruction(dto)),
 		]).invoke({});
 
-		return await this.model
+		return await this.getModel(model)
 			.withStructuredOutput(zodToJsonSchema(SuggestionResponseSchema))
 			.invoke(promptValue);
 	}
