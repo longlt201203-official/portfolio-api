@@ -10,7 +10,7 @@ import { SuggestionResponseSchema, SuggestRequest } from "./dto";
 import { ChatOpenAI } from "@langchain/openai";
 import zodToJsonSchema from "zod-to-json-schema";
 import { BaseChatModel } from "@langchain/core/language_models/chat_models";
-import { ModelNotFoundError } from "./errors";
+import { ModelNotFoundError, ParsingSuggestionError } from "./errors";
 import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 
 @Injectable()
@@ -41,14 +41,32 @@ export class AiService {
 		return this.modelMap.get(model)!;
 	}
 
+	private cleanJsonString(raw: string): string {
+		const firstBrace = raw.indexOf("{");
+		const lastBrace = raw.lastIndexOf("}");
+
+		if (firstBrace === -1 || lastBrace === -1 || lastBrace < firstBrace) {
+			return "";
+		}
+
+		return raw.substring(firstBrace, lastBrace + 1);
+	}
+
 	async suggest(model: string, dto: SuggestRequest) {
 		const promptValue = await ChatPromptTemplate.fromMessages([
 			new SystemMessage(suggestSystemInstruction),
 			new HumanMessage(suggestHumanInstruction(dto)),
 		]).invoke({});
 
-		return await this.getModel(model)
-			.withStructuredOutput(zodToJsonSchema(SuggestionResponseSchema))
-			.invoke(promptValue);
+		const response = await this.getModel(model).invoke(promptValue);
+
+		const cleanedJson = this.cleanJsonString(response.content.toString());
+
+		try {
+			const parsed = JSON.parse(cleanedJson);
+			return SuggestionResponseSchema.parse(parsed);
+		} catch (error) {
+			throw new ParsingSuggestionError(error);
+		}
 	}
 }

@@ -42,8 +42,8 @@ export class BlogController {
 
 	@Get()
 	@SwaggerApiResponse(BlogResponse, { isArray: true })
-	async findMany(@Query() query: BlogQuery) {
-		const data = await this.blogService.findMany(query);
+	async findMany() {
+		const data = await this.blogService.findMany();
 		return new ApiResponseDto(BlogResponse.fromDocuments(data));
 	}
 
