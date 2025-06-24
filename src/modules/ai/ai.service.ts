@@ -11,16 +11,19 @@ import { ChatOpenAI } from "@langchain/openai";
 import zodToJsonSchema from "zod-to-json-schema";
 import { BaseChatModel } from "@langchain/core/language_models/chat_models";
 import { ModelNotFoundError } from "./errors";
-// import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
+import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 
 @Injectable()
 export class AiService {
 	private readonly modelMap: Map<string, BaseChatModel> = new Map();
 	constructor() {
-		// this.modelMap.set("gemini-2.0-flash", new ChatGoogleGenerativeAI({
-		// 	model: "gemini-2.0-flash",
-		// 	apikey: Env.GEMINI_API_KEY
-		// }))
+		this.modelMap.set(
+			"gemini-2.0-flash",
+			new ChatGoogleGenerativeAI({
+				model: "gemini-2.0-flash",
+				apiKey: Env.GEMINI_API_KEY,
+			}),
+		);
 
 		this.modelMap.set(
 			"gpt-4",
