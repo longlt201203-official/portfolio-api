@@ -16,7 +16,7 @@ export class BlogService {
 		return await blog.save();
 	}
 
-	async findMany(query: BlogQuery) {
+	async findMany() {
 		return await BlogModel.find({}, { content: false }, {})
 			.sort({ isVisible: -1, updatedAt: -1 })
 			.exec();
