@@ -2,7 +2,6 @@ import {
 	Controller,
 	Param,
 	Body,
-	Query,
 	Post,
 	Get,
 	Put,
@@ -12,7 +11,6 @@ import { ProjectService } from "./project.service";
 import {
 	CreateProjectRequest,
 	UpdateProjectRequest,
-	ProjectQuery,
 	ProjectResponse,
 } from "./dto";
 import {
@@ -48,8 +46,8 @@ export class ProjectController {
 
 	@Get()
 	@SwaggerApiResponse(ProjectResponse, { isArray: true })
-	async findMany(@Query() query: ProjectQuery) {
-		const data = await this.projectService.findMany(query);
+	async findMany() {
+		const data = await this.projectService.findMany();
 		return new ApiResponseDto(ProjectResponse.fromDocuments(data));
 	}
 
