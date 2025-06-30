@@ -1,9 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import {
-	CreateProjectRequest,
-	UpdateProjectRequest,
-	ProjectQuery,
-} from "./dto";
+import { CreateProjectRequest, UpdateProjectRequest } from "./dto";
 import { ProjectModel } from "@db/models";
 import { ProjectNotFoundError } from "./errors";
 
@@ -28,7 +24,7 @@ export class ProjectService {
 		await project.save();
 	}
 
-	async findMany(query: ProjectQuery) {
+	async findMany() {
 		return await ProjectModel.find().sort({ sort: -1, createdAt: -1 });
 	}
 

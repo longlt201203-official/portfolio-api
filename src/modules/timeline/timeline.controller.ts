@@ -2,7 +2,6 @@ import {
 	Controller,
 	Param,
 	Body,
-	Query,
 	Post,
 	Get,
 	Put,
@@ -12,7 +11,6 @@ import { TimelineService } from "./timeline.service";
 import {
 	CreateTimelineRequest,
 	UpdateTimelineRequest,
-	TimelineQuery,
 	TimelineResponse,
 } from "./dto";
 import {
@@ -49,8 +47,8 @@ export class TimelineController {
 
 	@Get()
 	@SwaggerApiResponse(TimelineResponse, { isArray: true })
-	async findMany(@Query() query: TimelineQuery) {
-		const data = await this.timelineService.findMany(query);
+	async findMany() {
+		const data = await this.timelineService.findMany();
 		return new ApiResponseDto(
 			TimelineResponse.fromDocuments(data),
 			null,

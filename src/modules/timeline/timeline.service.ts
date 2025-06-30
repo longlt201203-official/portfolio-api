@@ -1,9 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import {
-	CreateTimelineRequest,
-	UpdateTimelineRequest,
-	TimelineQuery,
-} from "./dto";
+import { CreateTimelineRequest, UpdateTimelineRequest } from "./dto";
 import { TimelineModel } from "@db/models";
 import { TimelineNotFoundError } from "./errors";
 
@@ -23,7 +19,7 @@ export class TimelineService {
 		return await timeline.save();
 	}
 
-	async findMany(query: TimelineQuery) {
+	async findMany() {
 		return await TimelineModel.find({}).sort({ sort: -1, createdAt: -1 });
 	}
 
